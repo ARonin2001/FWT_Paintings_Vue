@@ -1,7 +1,7 @@
 <template>
-  <div className="logo">
+  <div class="logo">
     <a href="#">
-      <img src="@/assets/Logo.svg" alt="Logo Framework Team" className="icon" />
+      <img src="@/assets/Logo.svg" alt="Logo Framework Team" class="icon" />
     </a>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <button className="btn" @click="toggleThemeIcon">
+  <button class="btn" @click="toggleThemeIcon">
     <img :src="currentIcon" alt="Theme Paintings page" class=".themeIcon" />
   </button>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <header id="header">
-    <div className="container">
+    <div class="container">
       <Logo />
       <ThemeApp
         :images="['/src/assets/Theme-black-icon.svg', '/src/assets/Theme-white-icon.svg']"
