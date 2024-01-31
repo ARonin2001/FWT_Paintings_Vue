@@ -7,12 +7,13 @@ import { createPinia } from 'pinia';
 import App from './App.vue';
 import componentsUI from '@/components/UI';
 
+const pinia = createPinia();
 const app = createApp(App);
 
 componentsUI.forEach((component) => {
   app.component(component.name, component);
 });
 
-app.use(createPinia());
+app.use(pinia);
 
 app.mount('#app');

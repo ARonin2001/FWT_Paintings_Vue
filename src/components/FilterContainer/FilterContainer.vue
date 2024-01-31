@@ -2,59 +2,83 @@
   <div class="mainContainer">
     <div class="container">
       <app-filter>
-        <field-input type="text" name="name" v-model:value="paintingName" class="input__name" />
+        <field-input
+          type="text"
+          name="name"
+          v-model:value="state.paintingName"
+          class="input__name"
+        />
       </app-filter>
       <app-filter>
-        <FilterList title="Authors">
-          <template v-slot:default="slotProps">
-            <FilterSelect :lists="lists" :handleClick="slotProps.changeTitle" />
-          </template>
+        <FilterList :title="state.authorTitle" @handleClick="changeTitleAuthor">
+          <FilterSelect :lists="authors" :handleClick="changeTitleAuthor" />
         </FilterList>
       </app-filter>
       <app-filter>
-        <FilterList title="Locations">
-          <template v-slot:default="slotProps">
-            <FilterSelect :lists="lists" :handleClick="slotProps.changeTitle" />
-          </template>
+        <FilterList :title="state.locationTitle" @handleClick="changeTitleLocation">
+          <FilterSelect :lists="locations" :handleClick="changeTitleLocation" />
         </FilterList>
       </app-filter>
       <app-filter>
         <FilterList title="Created">
-          <FilterCreated />
+          <FilterCreated @changeValues="changeCreatedValues" />
         </FilterList>
       </app-filter>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { onMounted, computed, reactive } from 'vue';
 import FilterList from '@/components/FilterContainer/FilterList/FilterList.vue';
 import FilterSelect from '@/components/FilterContainer/FilterSelect/FilterSelect.vue';
 import FilterCreated from '@/components/FilterContainer/FilterCreated/FilterCreated.vue';
+import { useAuthorStore } from '@/store/authors';
+import { useLocationStore } from '@/store/location';
 
 interface State {
-  paintingName: string;
-  lists: { id: number; title: string }[];
+  authorTitle?: string;
+  locationTitle?: string;
+  authorId?: number;
+  locationId?: number;
+  paintingName?: string;
+  createdFrom?: string;
+  createdBefore?: string;
 }
 
-export default defineComponent({
-  components: {
-    FilterList,
-    FilterSelect,
-    FilterCreated
-  },
-  data(): State {
-    return {
-      paintingName: '',
-      lists: [
-        { id: 1, title: 'sdf' },
-        { id: 2, title: 'tittittt' },
-        { id: 3, title: 'Yehu' }
-      ]
-    };
-  }
+const authorsStore = useAuthorStore();
+const locationStore = useLocationStore();
+const state = reactive<State>({
+  authorTitle: 'Authors',
+  locationTitle: 'Location',
+  authorId: undefined,
+  locationId: undefined,
+  paintingName: '',
+  createdFrom: '',
+  createdBefore: ''
 });
+
+const authors = computed(() => authorsStore.authors.map((el) => ({ id: el.id, title: el.name })));
+const locations = computed(() =>
+  locationStore.locations.map((el) => ({ id: el.id, title: el.location }))
+);
+onMounted(async () => {
+  await authorsStore.setAllAuthors();
+  await locationStore.setAllLocations();
+});
+
+const changeTitleAuthor = (id: number, title: string) => {
+  state.authorId = id;
+  state.authorTitle = title;
+};
+const changeTitleLocation = (id: number, title: string) => {
+  state.locationId = id;
+  state.locationTitle = title;
+};
+const changeCreatedValues = (from: string, before: string) => {
+  state.createdBefore = before;
+  state.createdFrom = from;
+};
 </script>
 
 <style scoped lang="scss">

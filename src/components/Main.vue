@@ -1,24 +1,19 @@
 <template>
   <div>
-    <div class="filter__container">
+    <div class="paintings__container">
       <FilterContainer />
+      <PaintingsContainer />
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import FilterContainer from './FilterContainer/FilterContainer.vue';
-
-export default defineComponent({
-  components: {
-    FilterContainer
-  }
-});
+import PaintingsContainer from '@/components/Paintings/PaintingsContainer.vue';
 </script>
 
-<style lang="scss">
-.filter__container {
+<style scoped lang="scss">
+.paintings__container {
   margin-bottom: 45px;
 }
 </style>

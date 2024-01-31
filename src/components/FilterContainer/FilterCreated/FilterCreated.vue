@@ -2,20 +2,28 @@
   <div class="created__container">
     <div class="form">
       <div class="inputs">
-        <field-input class="inp" name="from" type="number" />
+        <field-input class="inp" v-model:value="valueFrom" name="from" type="number" />
         <span class="dash"></span>
-        <field-input class="inp" name="before" type="number" />
+        <field-input class="inp" v-model:value="valueBefore" name="before" type="number" />
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { ref, watch } from 'vue';
 
-export default defineComponent({
-  name: 'drop-down-created'
-});
+const valueFrom = ref('');
+const valueBefore = ref('');
+
+const emit = defineEmits(['changeValues']);
+
+watch(
+  () => [valueFrom.value, valueBefore.value],
+  () => {
+    emit('changeValues', valueFrom.value, valueBefore.value);
+  }
+);
 </script>
 
 <style lang="scss" scoped src="./FilterCreated.scss"></style>

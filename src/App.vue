@@ -1,6 +1,6 @@
 <template>
   <div className="main">
-    <div className="container">
+    <div className="main__container">
       <div class="header__container">
         <Header />
       </div>
@@ -22,4 +22,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped src="@/App.scss"></style>
+<style src="@/App.scss"></style>

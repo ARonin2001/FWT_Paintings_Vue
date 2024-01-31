@@ -1,79 +1,72 @@
 <template>
   <ul
     class="list"
-    :class="{ active: isActive }"
+    :class="{ active: state.isActive }"
     data-select
     tabindex="1"
     @focusin="handleFocusUl"
-    @blur="toggleActive"
+    @focusout="isActiveToFalse"
   >
-    <li class="title" data-select>{{ selectedTitle }}</li>
+    <li class="title" data-select>{{ title }}</li>
 
     <div class="children">
-      <slot :changeTitle="changeTitle" :title="selectedTitle"></slot>
-      <!-- <Child
-        setTitle="{changeTitle}"
-        list="{list}"
-        setYearCreatedFrom="{setYearCreatedFrom}"
-        setYearCreatedBefore="{setYearCreatedBefore}"
-        createdFrom="{createdFrom}"
-        createdBefore="{createdBefore}"
-        tabindex="0"
-      /> -->
+      <slot></slot>
     </div>
 
     <div class="arrow"></div>
-    <div v-if="isDeleteTitle" data-btn-delete class="delete" tabindex="0" @click="toTitleDefault">
+    <div
+      v-if="state.isDeleteTitle"
+      data-btn-delete
+      class="delete"
+      tabindex="0"
+      @click="toTitleDefault"
+    >
       <span></span>
       <span></span>
     </div>
   </ul>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { reactive, watch } from 'vue';
 
 interface State {
-  selectedTitle: string;
+  defaultTitle: string;
   isActive: boolean;
   isDeleteTitle: boolean;
 }
-
-export default defineComponent({
-  name: 'drop-down-list',
-  props: {
-    title: { type: String, required: true }
-  },
-  data(): State {
-    return {
-      selectedTitle: '',
-      isActive: false,
-      isDeleteTitle: false
-    };
-  },
-  methods: {
-    toggleActive() {
-      this.isActive = !this.isActive;
-    },
-    changeTitle(title: string, itemId: number) {
-      this.selectedTitle = title;
-      // setItemValueId(itemId);
-      this.toggleActive();
-      this.isDeleteTitle = true;
-    },
-    toTitleDefault() {
-      const title = this.$props.title;
-      this.selectedTitle = title ? title : '';
-      this.isDeleteTitle = false;
-    },
-    handleFocusUl(e: Event) {
-      if (!('data-btn-delete' in (e.target as any).attributes)) this.isActive = true;
-    }
-  },
-  mounted() {
-    this.toTitleDefault();
-  }
+interface Props {
+  title: string;
+}
+const props = defineProps<Props>();
+const state: State = reactive({
+  defaultTitle: props.title,
+  isActive: false,
+  isDeleteTitle: false
 });
+const emit = defineEmits(['handleClick']);
+
+const isActiveToFalse = () => {
+  state.isActive = false;
+};
+const toTitleDefault = () => {
+  emit('handleClick', undefined, state.defaultTitle);
+  state.isDeleteTitle = false;
+};
+const handleFocusUl = (e: Event) => {
+  if (!('data-btn-delete' in (e.target as any).attributes)) {
+    state.isActive = true;
+  }
+};
+watch(
+  () => props.title,
+  (currentValue) => {
+    if (currentValue !== state.defaultTitle) {
+      state.isDeleteTitle = true;
+      state.isActive = false;
+    }
+  }
+);
 </script>
 
 <style scoped lang="scss" src="./FilterList.scss"></style>

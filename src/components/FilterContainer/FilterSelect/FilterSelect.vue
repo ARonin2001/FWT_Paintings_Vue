@@ -3,10 +3,10 @@
     <simplebar :auto-hide="false" force-visible="y" style="max-height: 300px">
       <ul class="select">
         <FilterSelectLi
-          v-for="list in lists"
+          v-for="list in props.lists"
           :key="list.id"
           :id="list.id"
-          :handleClick="handleClick"
+          @handleClick="props.handleClick"
           :title="list.title"
         />
       </ul>
@@ -14,31 +14,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, type PropType } from 'vue';
+<script setup lang="ts">
 import simplebar from 'simplebar-vue';
 import 'simplebar-vue/dist/simplebar.min.css';
 import FilterSelectLi from '@/components/FilterContainer/FilterSelect/FilterSelectLi.vue';
 
-interface ListProp {
+interface List {
   id: number;
   title: string;
 }
-interface handleClickProp {
-  (title: string, itemId: number): void;
+interface Props {
+  lists: List[];
+  handleClick: (id: number, title: string) => void;
 }
 
-export default defineComponent({
-  name: 'list-select',
-  components: {
-    simplebar,
-    FilterSelectLi
-  },
-  props: {
-    lists: Object as PropType<ListProp[]>,
-    handleClick: { type: Function as PropType<handleClickProp>, required: true }
-  }
-});
+const props = defineProps<Props>();
 </script>
 
 <style scoped lang="scss">

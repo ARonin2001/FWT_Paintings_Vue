@@ -1,23 +1,22 @@
 <template>
-  <li class="li" tabindex="0" @click="handleClick(title, id)">
+  <li class="li" tabindex="0" @click="onClick">
     <div class="content">{{ title }}</div>
   </li>
 </template>
 
-<script lang="ts">
-import { defineComponent, type PropType } from 'vue';
-
-interface handleClickProp {
-  (title: string, itemId: number): void;
+<script setup lang="ts">
+interface Props {
+  id: number;
+  title: string;
 }
 
-export default defineComponent({
-  props: {
-    id: { type: Number, required: true },
-    title: { type: String, required: true },
-    handleClick: { type: Function as PropType<handleClickProp>, required: true }
-  }
-});
+const props = defineProps<Props>();
+
+const emit = defineEmits(['handleClick']);
+
+const onClick = () => {
+  emit('handleClick', props.id, props.title);
+};
 </script>
 
 <style scoped lang="scss">
