@@ -1,8 +1,19 @@
 <template>
-  <button class="page"><slot></slot></button>
+  <button class="page" @click="onClick"><slot></slot></button>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+interface Props {
+  content?: string | number;
+}
+
+const props = defineProps<Props>();
+const emit = defineEmits(['handleClick']);
+
+const onClick = () => {
+  emit('handleClick', props.content);
+};
+</script>
 
 <style scoped lang="scss">
 .page {

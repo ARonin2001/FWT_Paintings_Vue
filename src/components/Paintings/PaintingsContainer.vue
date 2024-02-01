@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <Paintings class="painting-container__paintings" :paintings="paintingStore.paintings" />
+    <h2 v-if="paintingStore.isLoading">Is loading...</h2>
+    <Paintings v-else class="painting-container__paintings" :paintings="paintingStore.paintings" />
     <PaginationContainer />
   </div>
 </template>

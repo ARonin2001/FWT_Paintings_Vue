@@ -87,7 +87,8 @@ watch(
     state.authorId,
     state.locationId,
     state.createdFrom,
-    state.createdBefore
+    state.createdBefore,
+    usePaintingsStore().page
   ],
   async () => {
     await usePaintingsStore().setPaintings({

@@ -1,27 +1,32 @@
 <template>
   <div class="pagination">
     <div class="container">
-      <div class="pages btnsPrev">
-        <PaginationButton>
+      <div class="pages btnsPrev" :class="{ disabled: props.curPage === 1 }">
+        <PaginationButton @handleClick="toStartPage">
           <Arrow />
           <Arrow />
         </PaginationButton>
-        <PaginationButton>
+        <PaginationButton @handleClick="toPrevPage">
           <Arrow />
         </PaginationButton>
       </div>
 
       <div class="pages">
-        <PaginationButton>1</PaginationButton>
-        <PaginationButton>2</PaginationButton>
-        <PaginationButton>3</PaginationButton>
+        <PaginationButton
+          v-for="page in numberPagesArr"
+          :key="page"
+          :content="page"
+          @handleClick="changePage"
+          :class="{ current: page === curPage }"
+          >{{ page }}</PaginationButton
+        >
       </div>
 
-      <div class="pages btnsNext">
-        <PaginationButton>
+      <div class="pages btnsNext" :class="{ disabled: curPage === countPages }">
+        <PaginationButton @handleClick="toNextPage">
           <Arrow />
         </PaginationButton>
-        <PaginationButton>
+        <PaginationButton @handleClick="toEndPage">
           <Arrow />
           <Arrow />
         </PaginationButton>
@@ -30,17 +35,22 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import Arrow from './Arrow.vue';
 import PaginationButton from './PaginationButton.vue';
 
-export default defineComponent({
-  components: {
-    Arrow,
-    PaginationButton
-  }
-});
+interface Props {
+  curPage: number;
+  countPages: number;
+  numberPagesArr: number[];
+  changePage: (selectedPage: number) => void;
+  toPrevPage: () => void;
+  toStartPage: () => void;
+  toNextPage: () => void;
+  toEndPage: () => void;
+}
+
+const props = defineProps<Props>();
 </script>
 
-<style scoped lang="scss" src="./Pagination.scss"></style>
+<style lang="scss" src="./Pagination.scss"></style>

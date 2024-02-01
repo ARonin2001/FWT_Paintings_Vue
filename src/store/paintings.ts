@@ -7,7 +7,9 @@ import type { IPaintingWithoutId, IPaintingWithId } from '@/models/IPainting';
 interface State {
   paintings: IPaintingWithoutId[];
   limit: number;
-  totalCount?: number;
+  page: number;
+  totalCount: number;
+  isLoading: boolean;
 }
 
 const getFormatPaintings = async (paintings: IPaintingWithId[]) => {
@@ -36,7 +38,9 @@ export const usePaintingsStore = defineStore('paintings', {
     return {
       paintings: [],
       limit: 12,
-      totalCount: 0
+      page: 1,
+      totalCount: 0,
+      isLoading: false
     };
   },
   actions: {
@@ -44,34 +48,51 @@ export const usePaintingsStore = defineStore('paintings', {
       this.totalCount = paintings ? paintings.length : 0;
     },
     async setAllPaintings() {
+      this.isLoading = true;
       const paintingsAll = await paintingApi.getPaintings({});
       this.setTotalCount(paintingsAll);
 
       const paintings = await paintingApi.getPaintings({ limit: this.limit });
 
       this.paintings = await getFormatPaintings(paintings);
+      this.isLoading = false;
     },
     async setPaintings(par: {
-      page?: number;
       authorId?: number;
       locationId?: number;
       name?: string;
       createdFrom?: number;
       createdBefore?: number;
     }) {
+      this.isLoading = true;
+
       const params = {
         limit: this.limit,
-        page: par.page,
+        page: this.page,
         name: par.name === '' ? undefined : par.name,
         authorId: par.authorId,
         locationId: par.locationId,
         createdFrom: par.createdFrom,
         createdBefore: par.createdBefore
       };
+      const paintingsPages = await paintingApi.getPaintings({
+        name: par.name === '' ? undefined : par.name,
+        authorId: par.authorId,
+        locationId: par.locationId,
+        createdFrom: par.createdFrom,
+        createdBefore: par.createdBefore
+      });
+      this.setTotalCount(paintingsPages);
+
       const paintings = await paintingApi.getPaintings(params);
-      this.setTotalCount(paintings);
 
       this.paintings = await getFormatPaintings(paintings);
+
+      this.isLoading = false;
+    },
+
+    setPage(page: number) {
+      this.page = page;
     }
   }
 });
