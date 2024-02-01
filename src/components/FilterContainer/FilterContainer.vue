@@ -29,12 +29,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, reactive } from 'vue';
+import { onMounted, computed, reactive, watch } from 'vue';
 import FilterList from '@/components/FilterContainer/FilterList/FilterList.vue';
 import FilterSelect from '@/components/FilterContainer/FilterSelect/FilterSelect.vue';
 import FilterCreated from '@/components/FilterContainer/FilterCreated/FilterCreated.vue';
 import { useAuthorStore } from '@/store/authors';
 import { useLocationStore } from '@/store/location';
+import { usePaintingsStore } from '@/store/paintings';
 
 interface State {
   authorTitle?: string;
@@ -42,8 +43,8 @@ interface State {
   authorId?: number;
   locationId?: number;
   paintingName?: string;
-  createdFrom?: string;
-  createdBefore?: string;
+  createdFrom?: number;
+  createdBefore?: number;
 }
 
 const authorsStore = useAuthorStore();
@@ -54,8 +55,8 @@ const state = reactive<State>({
   authorId: undefined,
   locationId: undefined,
   paintingName: '',
-  createdFrom: '',
-  createdBefore: ''
+  createdFrom: undefined,
+  createdBefore: undefined
 });
 
 const authors = computed(() => authorsStore.authors.map((el) => ({ id: el.id, title: el.name })));
@@ -75,10 +76,29 @@ const changeTitleLocation = (id: number, title: string) => {
   state.locationId = id;
   state.locationTitle = title;
 };
-const changeCreatedValues = (from: string, before: string) => {
-  state.createdBefore = before;
-  state.createdFrom = from;
+const changeCreatedValues = (from: number, before: number) => {
+  state.createdBefore = before === 0 ? undefined : before;
+  state.createdFrom = from === 0 ? undefined : from;
 };
+
+watch(
+  () => [
+    state.paintingName,
+    state.authorId,
+    state.locationId,
+    state.createdFrom,
+    state.createdBefore
+  ],
+  async () => {
+    await usePaintingsStore().setPaintings({
+      name: state.paintingName,
+      authorId: state.authorId,
+      locationId: state.locationId,
+      createdFrom: state.createdFrom,
+      createdBefore: state.createdBefore
+    });
+  }
+);
 </script>
 
 <style scoped lang="scss">

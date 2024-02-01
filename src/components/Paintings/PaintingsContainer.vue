@@ -14,7 +14,7 @@ import { onMounted } from 'vue';
 const paintingStore = usePaintingsStore();
 
 onMounted(async () => {
-  await paintingStore.setAllPaintings();
+  await paintingStore.setPaintings({});
 });
 </script>
 

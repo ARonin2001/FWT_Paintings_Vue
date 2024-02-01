@@ -13,15 +13,15 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 
-const valueFrom = ref('');
-const valueBefore = ref('');
+const valueFrom = ref<number | string>('');
+const valueBefore = ref<number | string>('');
 
 const emit = defineEmits(['changeValues']);
 
 watch(
   () => [valueFrom.value, valueBefore.value],
   () => {
-    emit('changeValues', valueFrom.value, valueBefore.value);
+    emit('changeValues', Number(valueFrom.value), Number(valueBefore.value));
   }
 );
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="item">
     <div class="container">
-      <a class="link" :href="props.painting.imageUrl">
+      <a class="link" :href="props.painting.imageUrl" @click.prevent="">
         <img class="img" :src="props.painting.imageUrl" />
 
         <div class="info">
