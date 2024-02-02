@@ -38,8 +38,8 @@ import { useLocationStore } from '@/store/location';
 import { usePaintingsStore } from '@/store/paintings';
 
 interface State {
-  authorTitle?: string;
-  locationTitle?: string;
+  authorTitle: string;
+  locationTitle: string;
   authorId?: number;
   locationId?: number;
   paintingName?: string;
