@@ -1,7 +1,7 @@
 <template>
   <header id="header">
     <div class="container">
-      <Logo />
+      <Logo :imgSrc="imgSrc" :imgUrl="imgUrl" :alt="alt" />
       <ThemeApp
         :images="['/src/assets/Theme-black-icon.svg', '/src/assets/Theme-white-icon.svg']"
       />
@@ -9,25 +9,15 @@
   </header>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { reactive } from 'vue';
 import Logo from './Logo.vue';
 import ThemeApp from './ThemeApp.vue';
 
-interface State {
-  themeImg: string;
-}
-
-export default defineComponent({
-  components: {
-    Logo,
-    ThemeApp
-  },
-  data(): State {
-    return {
-      themeImg: ''
-    };
-  }
+const { imgUrl, imgSrc, alt } = reactive({
+  imgUrl: '#',
+  imgSrc: '/src/assets/Logo.svg',
+  alt: 'Logo Framework Team'
 });
 </script>
 

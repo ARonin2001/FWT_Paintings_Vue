@@ -1,15 +1,19 @@
 <template>
   <div class="logo">
-    <a href="#">
-      <img src="@/assets/Logo.svg" alt="Logo Framework Team" class="icon" />
+    <a :href="imgUrl">
+      <img :src="imgSrc" :alt="alt" class="icon" />
     </a>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+interface Props {
+  imgSrc: string;
+  imgUrl?: string;
+  alt?: string;
+}
 
-export default defineComponent({});
+const props = defineProps<Props>();
 </script>
 
 <style scoped lang="scss">

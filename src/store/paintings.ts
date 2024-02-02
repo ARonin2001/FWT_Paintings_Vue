@@ -12,12 +12,20 @@ interface State {
   isLoading: boolean;
 }
 
-const getFormatPaintings = async (paintings: IPaintingWithId[]) => {
-  if (paintings && paintings?.length > 0) {
-    const authors = await useAuthorStore().authors;
-    const locaitons = await useLocationStore().locations;
+interface PaintingsWithParams {
+  authorId?: number;
+  locationId?: number;
+  name?: string;
+  createdFrom?: number;
+  createdBefore?: number;
+}
 
-    const formatedPaintings = await paintings.map((el: IPaintingWithId): IPaintingWithoutId => {
+const getFormatPaintings = (paintings: IPaintingWithId[]) => {
+  if (paintings && paintings?.length > 0) {
+    const authors = useAuthorStore().authors;
+    const locaitons = useLocationStore().locations;
+
+    const formatedPaintings = paintings.map((el: IPaintingWithId): IPaintingWithoutId => {
       return {
         id: el.id,
         imageUrl: baseURL + el.imageUrl,
@@ -47,50 +55,34 @@ export const usePaintingsStore = defineStore('paintings', {
     setTotalCount(paintings: IPaintingWithId[] | IPaintingWithoutId[]) {
       this.totalCount = paintings ? paintings.length : 0;
     },
-    async setAllPaintings() {
+    async setPaintings(par: PaintingsWithParams) {
       this.isLoading = true;
-      const paintingsAll = await paintingApi.getPaintings({});
-      this.setTotalCount(paintingsAll);
 
-      const paintings = await paintingApi.getPaintings({ limit: this.limit });
-
-      this.paintings = await getFormatPaintings(paintings);
-      this.isLoading = false;
-    },
-    async setPaintings(par: {
-      authorId?: number;
-      locationId?: number;
-      name?: string;
-      createdFrom?: number;
-      createdBefore?: number;
-    }) {
-      this.isLoading = true;
+      const { name, authorId, locationId, createdFrom, createdBefore } = par;
 
       const params = {
-        limit: this.limit,
-        page: this.page,
-        name: par.name === '' ? undefined : par.name,
-        authorId: par.authorId,
-        locationId: par.locationId,
-        createdFrom: par.createdFrom,
-        createdBefore: par.createdBefore
+        name: name === '' ? undefined : name,
+        authorId,
+        locationId,
+        createdFrom,
+        createdBefore
       };
-      const paintingsPages = await paintingApi.getPaintings({
-        name: par.name === '' ? undefined : par.name,
-        authorId: par.authorId,
-        locationId: par.locationId,
-        createdFrom: par.createdFrom,
-        createdBefore: par.createdBefore
-      });
+
+      // get paintings without limit and page to set TotalCount;
+      const paintingsPages = await paintingApi.getPaintings(params);
       this.setTotalCount(paintingsPages);
 
-      const paintings = await paintingApi.getPaintings(params);
+      // get paintings with limit and page to set paintings
+      const paintings = await paintingApi.getPaintings({
+        ...params,
+        limit: this.limit,
+        page: this.page
+      });
 
-      this.paintings = await getFormatPaintings(paintings);
+      this.paintings = getFormatPaintings(paintings);
 
       this.isLoading = false;
     },
-
     setPage(page: number) {
       this.page = page;
     }

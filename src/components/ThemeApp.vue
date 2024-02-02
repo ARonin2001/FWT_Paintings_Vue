@@ -1,12 +1,11 @@
 <template>
   <button class="btn" @click="toggleThemeIcon">
-    <img :src="currentIcon" alt="Theme Paintings page" class=".themeIcon" />
+    <img :src="state.currentIcon" alt="Theme Paintings page" class=".themeIcon" />
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import type { PropType } from 'vue';
+<script setup lang="ts">
+import { onMounted, reactive } from 'vue';
 
 interface State {
   currentIcon: string;
@@ -14,33 +13,24 @@ interface State {
   bodyThemeAttribute: 'light' | 'dark';
 }
 
-export default defineComponent({
-  data(): State {
-    return {
-      currentIcon: '',
-      toggleTheme: true,
-      bodyThemeAttribute: 'light'
-    };
-  },
-  props: {
-    images: {
-      type: Object as PropType<string[]>,
-      required: true
-    }
-  },
-  methods: {
-    toggleThemeIcon() {
-      this.bodyThemeAttribute = this.toggleTheme ? 'dark' : 'light';
+const state = reactive<State>({
+  currentIcon: '',
+  toggleTheme: true,
+  bodyThemeAttribute: 'light'
+});
 
-      this.toggleTheme = !this.toggleTheme;
-      this.currentIcon = this.toggleTheme ? this.$props.images[0] : this.$props.images[1];
+const props = defineProps<{ images: string[] }>();
 
-      document.body.setAttribute('data-theme', this.bodyThemeAttribute);
-    }
-  },
-  mounted() {
-    this.currentIcon = this.$props.images[0];
-  }
+const toggleThemeIcon = () => {
+  state.bodyThemeAttribute = state.toggleTheme ? 'dark' : 'light';
+
+  state.toggleTheme = !state.toggleTheme;
+  state.currentIcon = state.toggleTheme ? props.images[0] : props.images[1];
+
+  document.body.setAttribute('data-theme', state.bodyThemeAttribute);
+};
+onMounted(() => {
+  state.currentIcon = props.images[0];
 });
 </script>
 

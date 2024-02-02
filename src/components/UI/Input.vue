@@ -6,6 +6,7 @@
     :id="name"
     :placeholder="name"
     :name="name"
+    @focus="selectAllText"
   />
 </template>
 
@@ -13,7 +14,12 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'field-input'
+  name: 'field-input',
+  methods: {
+    selectAllText(e: Event) {
+      (e.target as HTMLInputElement).select();
+    }
+  }
 });
 </script>
 
