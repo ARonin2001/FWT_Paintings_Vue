@@ -2,9 +2,7 @@
   <header id="header">
     <div class="container">
       <Logo :imgSrc="imgSrc" :imgUrl="imgUrl" :alt="alt" />
-      <ThemeApp
-        :images="['/src/assets/Theme-black-icon.svg', '/src/assets/Theme-white-icon.svg']"
-      />
+      <ThemeApp :images="['src/assets/Theme-black-icon.svg', 'src/assets/Theme-white-icon.svg']" />
     </div>
   </header>
 </template>
@@ -16,7 +14,7 @@ import ThemeApp from './ThemeApp.vue';
 
 const { imgUrl, imgSrc, alt } = reactive({
   imgUrl: '#',
-  imgSrc: '/src/assets/Logo.svg',
+  imgSrc: 'src/assets/Logo.svg',
   alt: 'Logo Framework Team'
 });
 </script>
