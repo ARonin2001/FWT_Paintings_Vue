@@ -1,8 +1,8 @@
 <template>
   <header id="header">
     <div class="container">
-      <Logo :imgSrc="imgSrc" :imgUrl="imgUrl" :alt="alt" />
-      <ThemeApp :images="['src/assets/Theme-black-icon.svg', 'src/assets/Theme-white-icon.svg']" />
+      <Logo :imgSrc="logoImg" :imgUrl="imgUrl" :alt="alt" />
+      <ThemeApp :images="[themeBlackIcon, themeWhiteIcon]" />
     </div>
   </header>
 </template>
@@ -11,10 +11,13 @@
 import { reactive } from 'vue';
 import Logo from './Logo.vue';
 import ThemeApp from './ThemeApp.vue';
+import logoImg from '@/assets/img/Logo.svg';
+import themeBlackIcon from '@/assets/img/Theme-black-icon.svg';
+import themeWhiteIcon from '@/assets/img/Theme-white-icon.svg';
 
 const { imgUrl, imgSrc, alt } = reactive({
   imgUrl: '#',
-  imgSrc: 'src/assets/Logo.svg',
+  imgSrc: '@/assets/img/Logo.svg',
   alt: 'Logo Framework Team'
 });
 </script>
